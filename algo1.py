@@ -1,7 +1,8 @@
 # %load algo1.py
 # importing the required modules
+# if you run in terminal/command, please just delete this line: %matplotlib inline
 %matplotlib inline
-# if you run in terminal/command, please just delete this line
+
 import matplotlib.pyplot as plt
 import numpy as np
 from random import randint
@@ -11,13 +12,13 @@ import pandas as pd
 # BubbleSort
 def BubbleSort(arr):
     n = len(arr)
- 
+
     # Traverse through all array elements
     for i in range(n):
- 
+
         # Last i elements are already in place
         for j in range(0, n-i-1):
- 
+
             # traverse the array from 0 to n-i-1
             # Swap if the element found is greater
             # than the next element
@@ -91,9 +92,10 @@ def MergeSort(arr):
 			k+=1
 #	print(arr)
 
-
+# average case
 def average_case(i, ave_merge, ave_insert, ave_select, ave_bubble):
     for j in range(0,10):
+        # Random input instance generation
         mylist = [randint(0,i) for x in range(i)]
         copy = [i for i in mylist]
         since = time.time_ns()
@@ -112,7 +114,7 @@ def average_case(i, ave_merge, ave_insert, ave_select, ave_bubble):
         SelectSort(mylist)
         time_elapsed = time.time_ns() - since
         ave_select += time_elapsed
-        
+
         mylist = copy
         since = time.time_ns()
         BubbleSort(mylist)
@@ -124,9 +126,11 @@ def average_case(i, ave_merge, ave_insert, ave_select, ave_bubble):
     ave_bubble = ave_bubble/10
     return ave_merge, ave_insert, ave_select, ave_bubble
 
+# best/ worst case
 def extreme_case(i, which_case, merge, insert, select,bubble):
     if which_case == 'best_case':
         for j in range(0,10):
+            # Random input instance generation
             mylist = [randint(0,i) for x in range(i)]
             mylist.sort(reverse= False)
             copy = [i for i in mylist]
@@ -147,7 +151,7 @@ def extreme_case(i, which_case, merge, insert, select,bubble):
             SelectSort(mylist)
             time_elapsed = time.time_ns() - since
             select += time_elapsed
-            
+
             mylist = copy
             since = time.time_ns()
             BubbleSort(mylist)
@@ -159,6 +163,7 @@ def extreme_case(i, which_case, merge, insert, select,bubble):
         bubble = bubble/10
     elif which_case == 'worst_case':
         for j in range(0,10):
+            # Random input instance generation
             mylist = [randint(0,i) for x in range(i)]
             mylist.sort(reverse= True)
             copy = [i for i in mylist]
@@ -178,7 +183,7 @@ def extreme_case(i, which_case, merge, insert, select,bubble):
             SelectSort(mylist)
             time_elapsed = time.time_ns() - since
             select += time_elapsed
-            
+
             mylist = copy
             since = time.time_ns()
             BubbleSort(mylist)
@@ -191,7 +196,9 @@ def extreme_case(i, which_case, merge, insert, select,bubble):
     #print('{} time of {} : {}'.format(which_case, which_sort, times))
     return merge, insert, select, bubble
 
-n= [i*100 for i in range(1,11)] # different input size
+# testframework
+# changing different input size
+n= [i*100 for i in range(1,201)] # different input size
 ave_merge = []
 ave_insert = []
 ave_select = []
@@ -244,10 +251,6 @@ for i in n:
 
 
 plt.figure()                # the first figure
-#plt.xlim(1, input)
-#plt.ylim(0,0.20)
-#plt.xticks(np.arange(min(x), max(x), 1.0))
-#plt.yticks(np.arange(min(y), max(y), 0.1))
 plt.xlabel('Input size N')
 plt.ylabel('Running time T(N)')
 #plt.grid(True)
@@ -261,11 +264,7 @@ plt.savefig('ave.png')
 plt.show()
 
 
-plt.figure()                # the first figure
-#plt.xlim(1, input)
-#plt.ylim(0,0.20)
-#plt.xticks(np.arange(min(x), max(x), 1.0))
-#plt.yticks(np.arange(min(y), max(y), 0.1))
+plt.figure()                # the second figure
 plt.xlabel('Input size N')
 plt.ylabel('Running time T(N)')
 #plt.grid(True)
@@ -279,11 +278,7 @@ plt.savefig('best.png')
 plt.show()
 
 
-plt.figure()                # the first figure
-#plt.xlim(1, input)
-#plt.ylim(0,0.20)
-#plt.xticks(np.arange(min(x), max(x), 1.0))
-#plt.yticks(np.arange(min(y), max(y), 1e1))
+plt.figure()                # the second figure
 plt.xlabel('Input size N')
 plt.ylabel('Running time T(N)')
 #plt.grid(True)
