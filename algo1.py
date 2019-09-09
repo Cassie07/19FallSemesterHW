@@ -1,3 +1,4 @@
+# %load algo1.py
 # importing the required modules
 %matplotlib inline
 # if you run in terminal/command, please just delete this line
@@ -5,6 +6,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 from random import randint
 import time
+import pandas as pd
+
+# BubbleSort
+def BubbleSort(arr):
+    n = len(arr)
+ 
+    # Traverse through all array elements
+    for i in range(n):
+ 
+        # Last i elements are already in place
+        for j in range(0, n-i-1):
+ 
+            # traverse the array from 0 to n-i-1
+            # Swap if the element found is greater
+            # than the next element
+            if arr[j] > arr[j+1] :
+                tmp = arr[j]
+                arr[j] = arr[j+1]
+                arr[j+1] = tmp
 
 # SelectSort
 def SelectSort(arr):
@@ -72,7 +92,7 @@ def MergeSort(arr):
 #	print(arr)
 
 
-def average_case(i, ave_merge, ave_insert, ave_select):
+def average_case(i, ave_merge, ave_insert, ave_select, ave_bubble):
     for j in range(0,10):
         mylist = [randint(0,i) for x in range(i)]
         copy = [i for i in mylist]
@@ -92,12 +112,19 @@ def average_case(i, ave_merge, ave_insert, ave_select):
         SelectSort(mylist)
         time_elapsed = time.time_ns() - since
         ave_select += time_elapsed
+        
+        mylist = copy
+        since = time.time_ns()
+        BubbleSort(mylist)
+        time_elapsed = time.time_ns() - since
+        ave_bubble += time_elapsed
     ave_merge = ave_merge/10
     ave_insert = ave_insert/10
     ave_select = ave_select/10
-    return ave_merge, ave_insert, ave_select
+    ave_bubble = ave_bubble/10
+    return ave_merge, ave_insert, ave_select, ave_bubble
 
-def extreme_case(i, which_case, merge, insert, select):
+def extreme_case(i, which_case, merge, insert, select,bubble):
     if which_case == 'best_case':
         for j in range(0,10):
             mylist = [randint(0,i) for x in range(i)]
@@ -120,9 +147,16 @@ def extreme_case(i, which_case, merge, insert, select):
             SelectSort(mylist)
             time_elapsed = time.time_ns() - since
             select += time_elapsed
+            
+            mylist = copy
+            since = time.time_ns()
+            BubbleSort(mylist)
+            time_elapsed = time.time_ns() - since
+            bubble += time_elapsed
         merge = merge/10
         insert = insert/10
         select = select/10
+        bubble = bubble/10
     elif which_case == 'worst_case':
         for j in range(0,10):
             mylist = [randint(0,i) for x in range(i)]
@@ -144,81 +178,69 @@ def extreme_case(i, which_case, merge, insert, select):
             SelectSort(mylist)
             time_elapsed = time.time_ns() - since
             select += time_elapsed
+            
+            mylist = copy
+            since = time.time_ns()
+            BubbleSort(mylist)
+            time_elapsed = time.time_ns() - since
+            bubble += time_elapsed
         merge = merge/10
         insert = insert/10
         select = select/10
+        bubble = bubble/10
     #print('{} time of {} : {}'.format(which_case, which_sort, times))
-    return merge, insert, select
+    return merge, insert, select, bubble
 
-n= [i*100 for i in range(1,21)] # different input size
+n= [i*100 for i in range(1,11)] # different input size
 ave_merge = []
 ave_insert = []
 ave_select = []
+ave_bubble = []
 best_merge = []
 best_insert = []
 best_select = []
+best_bubble = []
 worst_merge = []
 worst_insert = []
 worst_select = []
+worst_bubble = []
 
 input_size = []
 for i in n:
     avemerge = 0
     aveinsert = 0
     aveselect = 0
+    avebubble = 0
     print('The input size is : {}'.format(i))
     input_size.append(i)
-    avemerge, aveinsert, aveselect = average_case(i, avemerge, aveinsert, aveselect)
+    avemerge, aveinsert, aveselect, avebubble = average_case(i, avemerge, aveinsert, aveselect, avebubble)
     ave_merge.append(avemerge)
     ave_insert.append(aveinsert)
     ave_select.append(aveselect)
+    ave_bubble.append(avebubble)
 
     merge = 0
     insert = 0
     select = 0
+    bubble = 0
     print('The input size is : {}'.format(i))
-    merge, insert, select = extreme_case(i,'best_case', merge, insert, select)
+    merge, insert, select, bubble = extreme_case(i,'best_case', merge, insert, select, bubble)
     best_merge.append(merge)
     best_insert.append(insert)
     best_select.append(select)
+    best_bubble.append(bubble)
 
     merge = 0
     insert = 0
     select = 0
+    bubble = 0
     print('The input size is : {}'.format(i))
-    merge, insert, select = extreme_case(i,'worst_case', merge, insert, select)
+    merge, insert, select,bubble = extreme_case(i,'worst_case', merge, insert, select, bubble)
     worst_merge.append(merge)
     worst_insert.append(insert)
     worst_select.append(select)
+    worst_bubble.append(bubble)
 
-
-
-import pandas as pd
-
-# intialise data of lists.
-
-#merge_data = {'input_size': input_size, 'average_case': ave_merge, 'best_case': best_merge, 'worst_case': worst_merge}
-#insert_data = {'input_size': input_size, 'average_case': ave_insert, 'best_case': best_insert, 'worst_case': worst_insert}
-#select_data = {'input_size': input_size, 'average_case': ave_select, 'best_case': best_select, 'worst_case': worst_select}
-
-# Create DataFrame
-#merge_df = pd.DataFrame(merge_data)
-#insert_df = pd.DataFrame(insert_data)
-#select_df = pd.DataFrame(select_data)
-# Create DataFrame
-#df = pd.DataFrame(merge_df)
-# Create DataFrame
-#df = pd.DataFrame(insert_df)
-# Create DataFrame
-#df = pd.DataFrame(select_df)
-
-# Print the output.
-#print('MergeSort')
-#print(merge_df)
-#print('InsertSort')
-#print(insert_df)
-#print('SelectSort')
-#print(select_df)
 
 
 plt.figure()                # the first figure
@@ -226,15 +248,16 @@ plt.figure()                # the first figure
 #plt.ylim(0,0.20)
 #plt.xticks(np.arange(min(x), max(x), 1.0))
 #plt.yticks(np.arange(min(y), max(y), 0.1))
-plt.xlabel('epoch')
-plt.ylabel('loss and accuracy')
+plt.xlabel('Input size N')
+plt.ylabel('Running time T(N)')
 #plt.grid(True)
 plt.plot(input_size,ave_merge, 'r', label='merge')
 plt.plot(input_size,ave_insert,'b',label='insert')
 plt.plot(input_size,ave_select,'y',label='select')
-plt.axis([100, input_size[len(input_size)-1], 0, best_select[len(best_select)-1]])
+plt.plot(input_size,ave_bubble,'g',label='bubble')
+plt.axis([100, input_size[len(input_size)-1], 0, best_select[len(best_bubble)-1]])
 plt.legend()
-plt.savefig('ave.tif')
+plt.savefig('ave.png')
 plt.show()
 
 
@@ -243,15 +266,16 @@ plt.figure()                # the first figure
 #plt.ylim(0,0.20)
 #plt.xticks(np.arange(min(x), max(x), 1.0))
 #plt.yticks(np.arange(min(y), max(y), 0.1))
-plt.xlabel('epoch')
-plt.ylabel('loss and accuracy')
+plt.xlabel('Input size N')
+plt.ylabel('Running time T(N)')
 #plt.grid(True)
 plt.plot(input_size,best_merge, 'r', label='merge')
 plt.plot(input_size,best_insert,'b',label='insert')
 plt.plot(input_size,best_select,'y',label='select')
-plt.axis([100, input_size[len(input_size)-1], 0, best_select[len(best_select)-1]])
+plt.plot(input_size,best_bubble,'g',label='bubble')
+plt.axis([100, input_size[len(input_size)-1], 0, best_select[len(best_bubble)-1]])
 plt.legend()
-plt.savefig('best.tif')
+plt.savefig('best.png')
 plt.show()
 
 
@@ -260,13 +284,14 @@ plt.figure()                # the first figure
 #plt.ylim(0,0.20)
 #plt.xticks(np.arange(min(x), max(x), 1.0))
 #plt.yticks(np.arange(min(y), max(y), 1e1))
-plt.xlabel('epoch')
-plt.ylabel('loss and accuracy')
+plt.xlabel('Input size N')
+plt.ylabel('Running time T(N)')
 #plt.grid(True)
 plt.plot(input_size, worst_merge, 'r', label='merge')
 plt.plot(input_size, worst_insert,'b',label='insert')
 plt.plot(input_size, worst_select,'y',label='select')
+plt.plot(input_size, worst_bubble,'g',label='bubble')
 plt.axis([100, input_size[len(input_size)-1], 0, worst_insert[len(worst_insert)-1]])
 plt.legend()
-plt.savefig('worst.tif')
+plt.savefig('worst.png')
 plt.show()
